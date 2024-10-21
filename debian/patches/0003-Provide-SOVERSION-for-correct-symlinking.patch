@@ -1,0 +1,25 @@
+From: Vasyl Gello <vasek.gello@gmail.com>
+Date: Wed, 21 Jun 2023 10:22:15 -0400
+Subject: Provide SOVERSION for correct symlinking
+
+Forwarded: not-needed
+---
+ CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f24e992..69bf098 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -478,7 +478,10 @@ endif()
+ 
+ # webm_parser headers are rooted at webm/.
+ set_target_properties(webm PROPERTIES PUBLIC_HEADER
+-                                      "${webm_parser_public_headers}")
++                                      "${webm_parser_public_headers}"
++                                      OUTPUT_NAME webm
++                                      SOVERSION "1"
++                                      VERSION "1.0.0.31")
+ install(
+   TARGETS webm
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -1,0 +1,84 @@
+From: Vasyl Gello <vasek.gello@gmail.com>
+Date: Wed, 21 Jun 2023 10:18:23 -0400
+Subject: Build and install system tools
+
+Forwarded: not-needed
+---
+ CMakeLists.txt | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 27509ab..70d74c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -355,11 +355,23 @@ if(ENABLE_SAMPLE_PROGRAMS)
+ 
+   add_executable(vttdemux ${vttdemux_sources})
+   target_link_libraries(vttdemux LINK_PUBLIC webm)
++
++  install(TARGETS dumpvtt vttdemux
++          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/webm)
+ endif()
+ 
+ if(ENABLE_WEBMINFO)
+   add_executable(webm_info ${webm_info_sources})
+   target_link_libraries(webm_info LINK_PUBLIC webm)
++
++  install(TARGETS webm_info
++          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/webm)
+ endif()
+ 
+ if(ENABLE_WEBM_PARSER)
+@@ -379,6 +391,12 @@ if(ENABLE_WEBMTS)
+ 
+   add_executable(webm2ts ${webm2ts_sources} $<TARGET_OBJECTS:webmts>)
+   target_link_libraries(webm2ts LINK_PUBLIC webm)
++
++  install(TARGETS webm2pes webm2ts
++          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/webm)
+ endif()
+ 
+ if(ENABLE_TESTS)
+@@ -401,27 +419,27 @@ if(ENABLE_TESTS)
+   select_library_configurations(GTEST)
+ 
+   add_executable(mkvmuxer_tests ${mkvmuxer_tests_sources})
+-  target_link_libraries(mkvmuxer_tests LINK_PUBLIC gtest webm)
++  target_link_libraries(mkvmuxer_tests LINK_PUBLIC gtest webm atomic pthread)
+ 
+   add_executable(mkvparser_tests ${mkvparser_tests_sources})
+-  target_link_libraries(mkvparser_tests LINK_PUBLIC gtest webm)
++  target_link_libraries(mkvparser_tests LINK_PUBLIC gtest webm atomic pthread)
+ 
+   add_executable(vp9_header_parser_tests ${vp9_header_parser_tests_sources})
+-  target_link_libraries(vp9_header_parser_tests LINK_PUBLIC gtest webm)
++  target_link_libraries(vp9_header_parser_tests LINK_PUBLIC gtest webm atomic pthread)
+ 
+   add_executable(vp9_level_stats_tests ${vp9_level_stats_tests_sources})
+-  target_link_libraries(vp9_level_stats_tests LINK_PUBLIC gtest webm)
++  target_link_libraries(vp9_level_stats_tests LINK_PUBLIC gtest webm atomic pthread)
+ 
+   if(ENABLE_WEBMTS)
+     add_executable(webm2pes_tests ${webm2pes_tests_sources}
+                                   $<TARGET_OBJECTS:webmts>)
+-    target_link_libraries(webm2pes_tests LINK_PUBLIC gtest webm)
++    target_link_libraries(webm2pes_tests LINK_PUBLIC gtest webm atomic pthread)
+   endif()
+ 
+   if(ENABLE_WEBM_PARSER)
+     include_directories("${GTEST_SRC_DIR}/googlemock/include")
+     add_executable(webm_parser_tests ${webm_parser_tests_sources})
+-    target_link_libraries(webm_parser_tests LINK_PUBLIC gmock gtest webm)
++    target_link_libraries(webm_parser_tests LINK_PUBLIC gmock gtest webm pthread)
+   endif()
+ endif()
+ 

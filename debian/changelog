@@ -1,5 +1,112 @@
-template-repository (1.0-1) unstable; urgency=medium
+libwebm (1.0.0.31-1) unstable; urgency=medium
 
-  * Initial release
+  * Team upload.
+  * New upstream release 1.0.0.31.
+    + Fixes test failures on big-endian architecture.
+  * debian/patches/: Drop patch 0005-0008, merged upstream.
+  * debian/patches: Refresh patches.
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Boyuan Yang <byang@debian.org>  Sat, 28 Oct 2023 15:15:48 -0400
+
+libwebm (1.0.0.30-6) unstable; urgency=medium
+
+  * Team upload.
+  * debian/patches/0004-Build-in-c-14-instead-of-c-11.patch:
+    Mark as Forwarded: not-needed, this patch is solely for Debian's
+    googletest compatibility and not needed upstream.
+  * debian/patches/0007,0008:
+    Apply upstream-proposed patch to fix FTBFS on big-endian
+    architectures. (Should solve #1038827)
+  * debian/tests/control: Do not restrict architecture for autopkgtest.
+  * debian/rules:
+    + No longer try to enable ENABLE_IWYU and explicitly disable it.
+      It is of little benefit for building a shared libarary. Besides,
+      this build flag never took effect in the past due to missing
+      build-dependency. (Closes: #1038801)
+    + Re-enable tests unconditionally on all architectures.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 07 Jul 2023 22:47:35 -0400
+
+libwebm (1.0.0.30-5) unstable; urgency=medium
+
+  * Team upload.
+  * debian/patches/0006-test_util.h-use-cstdint-instead-of-stdint.h.patch:
+    Add patch from upstream to fix FTBFS with GCC 13. (Closes: #1037748)
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 29 Jun 2023 10:39:52 -0400
+
+libwebm (1.0.0.30-4) unstable; urgency=medium
+
+  * Team upload.
+  * debian/tests/control: Limit autopkgtest architecture to
+    release architectures; s390x excluded due to known failed
+    tests (See #1038827).
+
+ -- Boyuan Yang <byang@debian.org>  Sat, 24 Jun 2023 15:40:24 -0400
+
+libwebm (1.0.0.30-3) unstable; urgency=medium
+
+  * Team upload.
+  * debian/patches/0005: Replace my patch with upstream-provided
+    patch.
+  * debian/tests/: Add autopkgtest using upstream testsuite.
+  * debian/rules: Allow test failure on big-endian architectures
+    fow now. (See #1038827)
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 22 Jun 2023 14:43:03 -0400
+
+libwebm (1.0.0.30-2) unstable; urgency=medium
+
+  * Team upload.
+  * debian/patches/:
+    + 0005-CMakeLists.txt-Restore-nested-include-dir-hierarchy.patch:
+      Restore nested header installation for mkvmuxer and mkvparser.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 21 Jun 2023 13:50:20 -0400
+
+libwebm (1.0.0.30-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream version 1.0.0.30.
+    + Upstream is now providing mkv* public headers by default.
+      (Closes: #1030890)
+  * debian/control:
+    + Mark googletest build-dependencies as <!nocheck>.
+  * debian/rules:
+    + Enable ENABLE_SAMPLE_PROGRAMS to build binaries in libwebm-tools.
+    - Drop -DUSE_LTO. This flag has no effect in current build.
+  * debian/patches: Refresh patches against new CMakeLists.txt.
+    + Add patch 0004 to enforce building in c++14 instead of c++11.
+      This is due to googletest dropping support of c++11 build.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 21 Jun 2023 10:35:29 -0400
+
+libwebm (1.0.0.29-1) unstable; urgency=medium
+
+  * New upstream version 1.0.0.29
+  * Bump Standards version to 4.6.1 - no changes required
+  * Bump copyright years
+
+ -- Vasyl Gello <vasek.gello@gmail.com>  Fri, 18 Nov 2022 22:00:54 +0000
+
+libwebm (1.0.0.28-1) unstable; urgency=medium
+
+  * New upstream version 1.0.0.28
+  * Switch to git tags in d/watch
+  * Bump library version in patch
+
+ -- Vasyl Gello <vasek.gello@gmail.com>  Sat, 08 May 2021 21:47:39 +0000
+
+libwebm (1.0.0.27+git20201124.485fb67-2) unstable; urgency=medium
+
+  * Remove duplicated inclusion of -lpthread and -latomic
+  * Bump copyright year
+  * Upload to unstable.
+
+ -- Vasyl Gello <vasek.gello@gmail.com>  Thu, 21 Jan 2021 20:25:40 +0000
+
+libwebm (1.0.0.27+git20201124.485fb67-1) experimental; urgency=medium
+
+  * Initial upload (Closes: #977760)
+
+ -- Vasyl Gello <vasek.gello@gmail.com>  Sun, 10 Jan 2021 16:55:33 +0100

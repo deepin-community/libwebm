@@ -1,0 +1,7 @@
+Tests: testsuite
+Depends: @, @builddeps@
+Restrictions: build-needed, allow-stderr
+
+#Tests: libwebm-dev
+#Depends: build-essential, libwebm-dev, pkg-config
+#Restrictions: allow-stderr, superficial

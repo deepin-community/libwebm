@@ -1,0 +1,49 @@
+From: Vasyl Gello <vasek.gello@gmail.com>
+Date: Wed, 21 Jun 2023 10:13:53 -0400
+Subject: Use system googletest
+
+Forwarded: not-needed
+---
+ CMakeLists.txt | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85b2603..27509ab 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -382,19 +382,23 @@ if(ENABLE_WEBMTS)
+ endif()
+ 
+ if(ENABLE_TESTS)
+-  set(GTEST_SRC_DIR
+-      "${LIBWEBM_SRC_DIR}/../googletest"
+-      CACHE PATH "Path to Googletest git repository.")
+-  # This directory is where libwebm will build googletest dependencies.
+-  set(GTEST_BUILD_DIR "${CMAKE_BINARY_DIR}/googletest_build")
+-
+-  if(LIBWEBM_DISABLE_GTEST_CMAKE)
+-    add_library(gtest STATIC "${GTEST_SRC_DIR}/googletest/src/gtest-all.cc")
+-    include_directories("${GTEST_SRC_DIR}/googletest")
+-  else()
+-    add_subdirectory("${GTEST_SRC_DIR}" "${GTEST_BUILD_DIR}")
++  if(PKG_CONFIG_FOUND)
++    pkg_check_modules(PC_GTEST gtest>=1.10.0 QUIET)
++    set(GTEST_VERSION ${PC_GTEST_VERSION})
++  elseif(WIN32)
++    set(GTEST_VERSION 1.10.0)
+   endif()
+-  include_directories("${GTEST_SRC_DIR}/googletest/include")
++
++  find_path(GTEST_INCLUDE_DIR NAMES gtest/gtest.h
++                              PATHS ${PC_GTEST_INCLUDEDIR})
++
++  find_library(GTEST_LIBRARY_RELEASE NAMES gtest
++                                     PATHS ${PC_GTEST_LIBDIR})
++  find_library(GTEST_LIBRARY_DEBUG NAMES gtestd
++                                   PATHS ${PC_GTEST_LIBDIR})
++
++  include(SelectLibraryConfigurations)
++  select_library_configurations(GTEST)
+ 
+   add_executable(mkvmuxer_tests ${mkvmuxer_tests_sources})
+   target_link_libraries(mkvmuxer_tests LINK_PUBLIC gtest webm)

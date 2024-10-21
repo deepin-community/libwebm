@@ -1,0 +1,4 @@
+0001-Use-system-googletest.patch
+0002-Build-and-install-system-tools.patch
+0003-Provide-SOVERSION-for-correct-symlinking.patch
+0004-Build-in-c-14-instead-of-c-11.patch
