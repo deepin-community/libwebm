@@ -1,0 +1,29 @@
+From: Boyuan Yang <byang@debian.org>
+Date: Wed, 21 Jun 2023 10:34:28 -0400
+Subject: Build in cxx14 instead of cxx11
+
+Googletest no longer supports building in c++11. Bumping version
+specification in CMakeLists.txt to c++14.
+
+Forwarded: not-needed
+Last-Update: 2023-06-21
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 70d74c6..f24e992 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,9 +32,9 @@ if(WIN32
+    OR CYGWIN
+    OR MSYS)
+   # Allow use of rand_r() / fdopen() and other POSIX functions.
+-  require_cxx_flag_nomsvc("-std=gnu++11")
++  require_cxx_flag_nomsvc("-std=gnu++14")
+ else()
+-  require_cxx_flag_nomsvc("-std=c++11")
++  require_cxx_flag_nomsvc("-std=c++14")
+ endif()
+ 
+ add_cxx_preproc_definition("__STDC_CONSTANT_MACROS")

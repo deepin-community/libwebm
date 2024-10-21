@@ -1,0 +1,10 @@
+version=4
+
+# Bare git branch
+opts="mode=git, \
+      pgpmode=none, \
+      compression=xz, \
+      uversionmangle=s/libwebm-//, \
+      dversionmangle=auto" \
+https://chromium.googlesource.com/webm/libwebm \
+refs/tags/libwebm-([\d\.]+) debian

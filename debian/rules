@@ -1,4 +1,43 @@
 #!/usr/bin/make -f
 
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+export DEB_CFLAGS_MAINT_STRIP  = -O2
+export DEB_CXXFLAGS_MAINT_STRIP = -O2
+export DEB_CFLAGS_MAINT_APPEND  = -O3 -fPIC -pie
+export DEB_CXXFLAGS_MAINT_APPEND = -O3 -fPIC -pie
+
+# Build tests by default but honor "nocheck" setting
+
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	CONFIGURE_OPTS := -DENABLE_TESTS=ON
+endif
+
 %:
 	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+            -DCMAKE_BUILD_TYPE=ReleaseWithDebInfo \
+            -DBUILD_SHARED_LIBS=ON \
+            -DENABLE_SAMPLE_PROGRAMS=ON \
+            -DENABLE_IWYU=OFF \
+            -DENABLE_WEBM_PARSER=ON \
+            ${CONFIGURE_OPTS} \
+            $(NULL)
+
+override_dh_auto_test:
+	cd obj-$(DEB_HOST_GNU_TYPE) && \
+		export LIBWEBM_TEST_DATA_PATH=../testing/testdata && \
+		./mkvmuxer_tests && \
+		./mkvparser_tests && \
+		./vp9_header_parser_tests && \
+		./vp9_level_stats_tests && \
+		./webm2pes_tests && \
+		./webm_parser_tests && \
+		unset LIBWEBM_TEST_DATA_PATH

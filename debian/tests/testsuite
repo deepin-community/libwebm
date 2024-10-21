@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# autopkgtest check for libwebm, running upstream testsuite
+# using googletest and cmake.
+#
+# SPDX-License-Identifier: BSD-3-Clause OR CC0-1.0
+# SPDX-FileCopyrightText: 2023 Boyuan Yang <byang@debian.org>
+
+set -e
+
+WORKDIR="${AUTOPKGTEST_TMP}"
+DEB_HOST_GNU_TYPE="$(dpkg-architecture -qDEB_HOST_GNU_TYPE)"
+
+# Copy the built tests
+BUILD_OUTPUT_DIR="obj-${DEB_HOST_GNU_TYPE}"
+cp -a -v "${BUILD_OUTPUT_DIR}"/*_tests "${WORKDIR}"
+
+export LIBWEBM_TEST_DATA_PATH="$(pwd)/testing/testdata"
+
+# Execute testsuite
+cd "${WORKDIR}"
+ls "${WORKDIR}"
+errs=""
+for t in *_tests ; do
+    echo "========== Running test ${t} =========="
+    if [ -x "./${t}" ]; then
+        rc=""
+        "./${t}" || rc="$?"
+        if [ -z "${rc}" ]; then
+            echo "=== OK ${t} ==="
+        else
+            echo "=== FAIL ${t} ==="
+            errs="${errs} ${t}"
+        fi
+    fi
+done
+unset LIBWEBM_TEST_DATA_PATH
+
+if [ -n "$errs" ]; then
+    echo "Testsuite failed (${errs})"
+    exit 1
+else
+    echo "Testsuite passed"
+    exit 0
+fi
